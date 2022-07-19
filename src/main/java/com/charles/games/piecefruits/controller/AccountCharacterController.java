@@ -76,7 +76,7 @@ public class AccountCharacterController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}")
     public ResponseEntity<Void> selectCharacter(@PathVariable("id") Long id) {
-        log.info("REST request to select account character");
+        log.info("REST request to select account character by id: {}", id);
         service.selectCharacter(id);
         return ResponseEntity.ok().build();
     }
