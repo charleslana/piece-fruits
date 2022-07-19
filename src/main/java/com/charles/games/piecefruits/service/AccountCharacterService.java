@@ -16,7 +16,6 @@ import com.charles.games.piecefruits.service.interfaces.BasicService;
 import com.charles.games.piecefruits.service.utils.LocaleUtils;
 import com.charles.games.piecefruits.service.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class AccountCharacterService implements BasicService {
 

@@ -33,42 +33,42 @@ public class AccountCharacterController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<ResponseDTO> create(@RequestBody @Valid CreateAccountCharacterDTO dto) {
-        log.info("REST request to create entity: {}", dto);
+        log.info("REST request to create account character: {}", dto);
         return ResponseEntity.ok(service.create(dto));
     }
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDTO> delete(@PathVariable("id") Long id) {
-        log.info("Rest request to delete character with id: {}", id);
+        log.info("REST request to delete account character with id: {}", id);
         return ResponseEntity.ok(service.delete(id));
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/details")
     public ResponseEntity<ListAccountCharacterDTO> get() {
-        log.info("REST to get character details");
+        log.info("REST to get account character details");
         return ResponseEntity.ok(service.get());
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<ListAccountCharacterDTO>> getAll() {
-        log.info("REST to get all characters");
+        log.info("REST to get all account characters");
         return ResponseEntity.ok(service.getAll());
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/all")
     public ResponseEntity<List<ListAccountCharacterDTO>> getAllByAccountId() {
-        log.info("REST to get all characters by account id");
+        log.info("REST to get all account characters by account id");
         return ResponseEntity.ok(service.getAllByAccountId());
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/logout")
     public ResponseEntity<Void> logoutCharacter() {
-        log.info("Rest request to logout character");
+        log.info("REST request to logout account character");
         service.logoutCharacter();
         return ResponseEntity.ok().build();
     }
@@ -76,7 +76,7 @@ public class AccountCharacterController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}")
     public ResponseEntity<Void> selectCharacter(@PathVariable("id") Long id) {
-        log.info("Rest request to select character");
+        log.info("REST request to select account character");
         service.selectCharacter(id);
         return ResponseEntity.ok().build();
     }
@@ -84,14 +84,14 @@ public class AccountCharacterController {
     @PreAuthorize("isAuthenticated()")
     @PutMapping
     public ResponseEntity<ResponseDTO> update(@RequestBody @Valid UpdateAccountCharacterDTO dto) {
-        log.info("REST request to update entity: {}", dto);
+        log.info("REST request to update account character: {}", dto);
         return ResponseEntity.ok(service.update(dto));
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/name")
     public ResponseEntity<ResponseDTO> updateName(@RequestBody @Valid UpdateAccountCharacterNameDTO dto) {
-        log.info("REST request to update character name: {}", dto.getName());
+        log.info("REST request to update account character name: {}", dto.getName());
         return ResponseEntity.ok(service.updateName(dto));
     }
 }

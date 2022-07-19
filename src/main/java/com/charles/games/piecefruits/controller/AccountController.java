@@ -27,7 +27,7 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<ResponseDTO> create(@RequestBody @Valid CreateAccountDTO dto) {
-        log.info("REST request to create entity: {}", dto);
+        log.info("REST request to create account: {}", dto);
         return ResponseEntity.ok(service.create(dto));
     }
 
