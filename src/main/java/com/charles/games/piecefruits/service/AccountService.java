@@ -1,0 +1,100 @@
+package com.charles.games.piecefruits.service;
+
+import com.charles.games.piecefruits.config.exceptions.BusinessRuleException;
+import com.charles.games.piecefruits.config.security.SecurityUtils;
+import com.charles.games.piecefruits.model.dto.CreateAccountDTO;
+import com.charles.games.piecefruits.model.dto.ListAccountDTO;
+import com.charles.games.piecefruits.model.dto.ResponseDTO;
+import com.charles.games.piecefruits.model.dto.UserDetailsDTO;
+import com.charles.games.piecefruits.model.entity.Account;
+import com.charles.games.piecefruits.model.enums.RoleEnum;
+import com.charles.games.piecefruits.model.enums.StatusEnum;
+import com.charles.games.piecefruits.repository.AccountRepository;
+import com.charles.games.piecefruits.service.interfaces.BasicService;
+import com.charles.games.piecefruits.service.utils.LocaleUtils;
+import com.charles.games.piecefruits.service.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.MessageSource;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+@Transactional(readOnly = true)
+public class AccountService implements UserDetailsService, BasicService {
+
+    private final BCryptPasswordEncoder encoder;
+    private final ModelMapper mapper;
+    private final MessageSource ms;
+    private final AccountRepository repository;
+
+    @Transactional
+    public ResponseDTO create(CreateAccountDTO dto) {
+        validateExistsEmail(dto);
+        Account account = mapper.map(dto, Account.class);
+        account.setPassword(encoder.encode(dto.getPassword()));
+        account.setStatus(StatusEnum.ACTIVE);
+        account.setRole(RoleEnum.USER);
+        repository.save(account);
+        return getSuccess("account.created");
+    }
+
+    public ListAccountDTO get() {
+        return repository.findById(getAuthAccount().getId()).map(account -> mapper.map(account, ListAccountDTO.class)).orElseThrow(() -> getException("account.not.found"));
+    }
+
+    public Account getAccountByEmail(String email) {
+        return repository.findByEmail(email).orElseThrow(() -> getException("account.not.exists.email"));
+    }
+
+    public List<ListAccountDTO> getAll() {
+        return repository.findAll().stream().map(account -> mapper.map(account, ListAccountDTO.class)).toList();
+    }
+
+    public Account getAuthAccount() {
+        String email = SecurityUtils.getAuthEmail();
+        return getAccountByEmail(email);
+    }
+
+    @Override
+    public BusinessRuleException getException(String message) {
+        return new BusinessRuleException(MessageUtils.ACCOUNT_EXCEPTION, message);
+    }
+
+    @Override
+    public ResponseDTO getSuccess(String message) {
+        return new ResponseDTO(MessageUtils.ACCOUNT_SUCCESS, message, null, LocaleUtils.currentLocale(), ms);
+    }
+
+    public List<GrantedAuthority> getRoles(String email) {
+        Account account = getAccountByEmail(email);
+        return Collections.singletonList(new SimpleGrantedAuthority(RoleEnum.ADMIN.equals(account.getRole()) ? "ROLE_ADMIN" : "ROLE_USER"));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("Load user by username: {}", username);
+        Account account = repository.findByEmailAndStatusNot(username, StatusEnum.INACTIVE).orElseThrow(() -> new UsernameNotFoundException(String.format("email %s does not exists or account not active", username)));
+        List<GrantedAuthority> roles = Collections.singletonList(new SimpleGrantedAuthority(RoleEnum.ADMIN.equals(account.getRole()) ? "ROLE_ADMIN" : "ROLE_USER"));
+        return new UserDetailsDTO(roles, account.getPassword(), account.getEmail());
+    }
+
+    private void validateExistsEmail(CreateAccountDTO dto) {
+        boolean existsByEmail = repository.existsByEmail(dto.getEmail());
+        if (existsByEmail) {
+            throw getException("account.exists.email");
+        }
+    }
+}
