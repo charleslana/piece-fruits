@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -46,6 +47,6 @@ public class Character implements Serializable {
     private LocalDateTime updatedAt;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "avatar_id", nullable = false)
-    private List<Avatar> avatar;
+    @JoinTable(name = "character_avatar", joinColumns = @JoinColumn(name = "character_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "avatar_id", nullable = false))
+    private List<Avatar> avatars;
 }
