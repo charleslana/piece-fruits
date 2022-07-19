@@ -30,6 +30,7 @@ public class ApiErrorDTO implements Serializable {
         this.value = values != null ? String.join(",", values) : "";
         this.message = ms.getMessage(message, this.value.split(","), locale);
     }
+
     public ApiErrorDTO(String status, String message, String value) {
         this.status = status;
         this.message = message;
