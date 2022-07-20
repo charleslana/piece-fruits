@@ -2,6 +2,7 @@ package com.charles.games.piecefruits.service;
 
 import com.charles.games.piecefruits.config.exceptions.BusinessRuleException;
 import com.charles.games.piecefruits.config.security.SecurityUtils;
+import com.charles.games.piecefruits.mapper.AccountCharacterMapper;
 import com.charles.games.piecefruits.model.dto.CreateAccountCharacterDTO;
 import com.charles.games.piecefruits.model.dto.ListAccountCharacterDTO;
 import com.charles.games.piecefruits.model.dto.ResponseDTO;
@@ -16,7 +17,6 @@ import com.charles.games.piecefruits.service.interfaces.BasicService;
 import com.charles.games.piecefruits.service.utils.LocaleUtils;
 import com.charles.games.piecefruits.service.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ public class AccountCharacterService implements BasicService {
 
     private final AccountService accountService;
     private final CharacterService characterService;
-    private final ModelMapper mapper;
+    private final AccountCharacterMapper mapper;
     private final MessageSource ms;
     private final AccountCharacterRepository repository;
 
@@ -40,7 +40,7 @@ public class AccountCharacterService implements BasicService {
         validateExistsName(dto);
         validateCountExceeded();
         Character character = characterService.existsCharacterId(dto.getCharacterId());
-        AccountCharacter accountCharacter = mapper.map(dto, AccountCharacter.class);
+        AccountCharacter accountCharacter = mapper.toEntity(dto);
         accountCharacter.setImage("1");
         accountCharacter.setLevel(1L);
         accountCharacter.setBanned(BannedEnum.NO);
@@ -59,15 +59,15 @@ public class AccountCharacterService implements BasicService {
     }
 
     public ListAccountCharacterDTO get() {
-        return repository.findById(getAuthCharacter().getId()).map(accountCharacter -> mapper.map(accountCharacter, ListAccountCharacterDTO.class)).orElseThrow(() -> getException("account.character.not.found"));
+        return repository.findById(getAuthCharacter().getId()).map(mapper::toListDto).orElseThrow(() -> getException("account.character.not.found"));
     }
 
     public List<ListAccountCharacterDTO> getAll() {
-        return repository.findAll().stream().map(accountCharacter -> mapper.map(accountCharacter, ListAccountCharacterDTO.class)).toList();
+        return repository.findAll().stream().map(mapper::toListDto).toList();
     }
 
     public List<ListAccountCharacterDTO> getAllByAccountId() {
-        return repository.findAllByAccountId(accountService.getAuthAccount().getId()).stream().map(accountCharacter -> mapper.map(accountCharacter, ListAccountCharacterDTO.class)).toList();
+        return repository.findAllByAccountId(accountService.getAuthAccount().getId()).stream().map(mapper::toListDto).toList();
     }
 
     public AccountCharacter getAuthCharacter() {

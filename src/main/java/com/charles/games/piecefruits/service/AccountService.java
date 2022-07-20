@@ -2,6 +2,7 @@ package com.charles.games.piecefruits.service;
 
 import com.charles.games.piecefruits.config.exceptions.BusinessRuleException;
 import com.charles.games.piecefruits.config.security.SecurityUtils;
+import com.charles.games.piecefruits.mapper.AccountMapper;
 import com.charles.games.piecefruits.model.dto.CreateAccountDTO;
 import com.charles.games.piecefruits.model.dto.ListAccountDTO;
 import com.charles.games.piecefruits.model.dto.ResponseDTO;
@@ -15,7 +16,6 @@ import com.charles.games.piecefruits.service.utils.LocaleUtils;
 import com.charles.games.piecefruits.service.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,14 +36,14 @@ import java.util.List;
 public class AccountService implements UserDetailsService, BasicService {
 
     private final BCryptPasswordEncoder encoder;
-    private final ModelMapper mapper;
+    private final AccountMapper mapper;
     private final MessageSource ms;
     private final AccountRepository repository;
 
     @Transactional
     public ResponseDTO create(CreateAccountDTO dto) {
         validateExistsEmail(dto);
-        Account account = mapper.map(dto, Account.class);
+        Account account = mapper.toEntity(dto);
         account.setPassword(encoder.encode(dto.getPassword()));
         account.setStatus(StatusEnum.ACTIVE);
         account.setRole(RoleEnum.USER);
@@ -52,7 +52,7 @@ public class AccountService implements UserDetailsService, BasicService {
     }
 
     public ListAccountDTO get() {
-        return repository.findById(getAuthAccount().getId()).map(account -> mapper.map(account, ListAccountDTO.class)).orElseThrow(() -> getException("account.not.found"));
+        return repository.findById(getAuthAccount().getId()).map(mapper::toListDto).orElseThrow(() -> getException("account.not.found"));
     }
 
     public Account getAccountByEmail(String email) {
@@ -60,7 +60,7 @@ public class AccountService implements UserDetailsService, BasicService {
     }
 
     public List<ListAccountDTO> getAll() {
-        return repository.findAll().stream().map(account -> mapper.map(account, ListAccountDTO.class)).toList();
+        return repository.findAll().stream().map(mapper::toListDto).toList();
     }
 
     public Account getAuthAccount() {

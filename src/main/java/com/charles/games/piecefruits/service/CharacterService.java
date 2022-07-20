@@ -7,14 +7,12 @@ import com.charles.games.piecefruits.repository.CharacterRepository;
 import com.charles.games.piecefruits.service.interfaces.BasicService;
 import com.charles.games.piecefruits.service.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CharacterService implements BasicService {
 
-    private final ModelMapper mapper;
     private final CharacterRepository repository;
 
     public Character existsCharacterId(Long id) {
