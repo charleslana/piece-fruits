@@ -1,5 +1,6 @@
 package com.charles.games.piecefruits.model.dto;
 
+import com.charles.games.piecefruits.model.enums.FactionEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,4 +27,7 @@ public class CreateAccountCharacterDTO implements Serializable {
     @NotNull
     @Min(1)
     private Long characterId;
+
+    @NotNull
+    private FactionEnum faction;
 }

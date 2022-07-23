@@ -1,6 +1,7 @@
 package com.charles.games.piecefruits.model.entity;
 
 import com.charles.games.piecefruits.model.enums.BannedEnum;
+import com.charles.games.piecefruits.model.enums.FactionEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,6 +50,10 @@ public class AccountCharacter implements Serializable {
 
     @Column(name = "level", nullable = false)
     private Long level;
+
+    @Column(name = "faction", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FactionEnum faction;
 
     @Column(name = "created_at")
     @CreationTimestamp

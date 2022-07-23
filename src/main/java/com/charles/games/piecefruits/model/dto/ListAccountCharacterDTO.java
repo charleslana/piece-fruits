@@ -1,5 +1,6 @@
 package com.charles.games.piecefruits.model.dto;
 
+import com.charles.games.piecefruits.model.enums.FactionEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class ListAccountCharacterDTO implements Serializable {
     private String name;
     private String image;
     private Long level;
+    private FactionEnum faction;
     private ListAttributeDTO attribute;
     private ListCharacterDTO character;
 }
