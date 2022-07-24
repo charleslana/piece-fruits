@@ -38,10 +38,10 @@ public class PieceFruitsConfig {
     @Bean
     CommandLineRunner commandLineRunner() {
         return args -> {
-            deleteAll();
-            createAvatar();
-            createCharacter();
-            createAccount();
+//            deleteAll();
+//            createAvatar();
+//            createCharacter();
+//            createAccount();
         };
     }
 
