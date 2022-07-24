@@ -53,7 +53,6 @@ public class PieceFruitsConfig {
         account1.setBirthDate(LocalDate.now());
         account1.setStatus(StatusEnum.ACTIVE);
         account1.setRole(RoleEnum.ADMIN);
-        accountRepository.save(account1);
 
         Account account2 = new Account();
         account2.setEmail("example2@example.com");
@@ -62,7 +61,8 @@ public class PieceFruitsConfig {
         account2.setBirthDate(LocalDate.now());
         account2.setStatus(StatusEnum.ACTIVE);
         account2.setRole(RoleEnum.USER);
-        accountRepository.save(account2);
+
+        accountRepository.saveAll(List.of(account1, account2));
 
         createAccountCharacter(account1);
     }
