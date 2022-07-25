@@ -5,6 +5,7 @@ import com.charles.games.piecefruits.mapper.CharacterMapper;
 import com.charles.games.piecefruits.model.dto.ListCharacterDTO;
 import com.charles.games.piecefruits.model.dto.ResponseDTO;
 import com.charles.games.piecefruits.model.entity.Character;
+import com.charles.games.piecefruits.model.enums.InitialEnum;
 import com.charles.games.piecefruits.repository.CharacterRepository;
 import com.charles.games.piecefruits.service.interfaces.BasicService;
 import com.charles.games.piecefruits.service.utils.MessageUtils;
@@ -25,8 +26,16 @@ public class CharacterService implements BasicService {
         return repository.findById(id).orElseThrow(() -> getException("character.not.found"));
     }
 
+    public Character existsCharacterIdAndInitial(Long id, InitialEnum initial) {
+        return repository.findByIdAndInitial(id, initial).orElseThrow(() -> getException("character.not.found"));
+    }
+
     public List<ListCharacterDTO> getAll() {
         return repository.findAll().stream().map(mapper::toListDto).toList();
+    }
+
+    public List<ListCharacterDTO> getAllByInitial(InitialEnum initial) {
+        return repository.findAllByInitial(initial).stream().map(mapper::toListDto).toList();
     }
 
     @Override

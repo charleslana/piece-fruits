@@ -1,6 +1,7 @@
 package com.charles.games.piecefruits.controller;
 
 import com.charles.games.piecefruits.model.dto.ListCharacterDTO;
+import com.charles.games.piecefruits.model.enums.InitialEnum;
 import com.charles.games.piecefruits.service.CharacterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +26,12 @@ public class CharacterController {
     public ResponseEntity<List<ListCharacterDTO>> getAll() {
         log.info("REST to get all characters");
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/initial")
+    public ResponseEntity<List<ListCharacterDTO>> getAllByInitial() {
+        log.info("REST to get all initial characters");
+        return ResponseEntity.ok(service.getAllByInitial(InitialEnum.YES));
     }
 }

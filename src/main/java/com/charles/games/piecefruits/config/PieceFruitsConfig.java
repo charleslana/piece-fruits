@@ -8,6 +8,7 @@ import com.charles.games.piecefruits.model.entity.Character;
 import com.charles.games.piecefruits.model.enums.BannedEnum;
 import com.charles.games.piecefruits.model.enums.FactionEnum;
 import com.charles.games.piecefruits.model.enums.GenderEnum;
+import com.charles.games.piecefruits.model.enums.InitialEnum;
 import com.charles.games.piecefruits.model.enums.RoleEnum;
 import com.charles.games.piecefruits.model.enums.StatusEnum;
 import com.charles.games.piecefruits.repository.AccountCharacterRepository;
@@ -100,14 +101,21 @@ public class PieceFruitsConfig {
     private void createCharacter() {
         String[] characters = new String[]{"Monkey D. Luffy", "Roronoa Zoro", "Nami", "Usopp", "Vinsmoke Sanji", "Tony Tony Chopper", "Nico Robin", "Franky", "Brook", "Jinbe"};
         List<Character> cs = new ArrayList<>();
+        List<Avatar> avatars = avatarRepository.findAll();
         for (String character : characters) {
             Character c = new Character();
             c.setName(character);
-            List<Avatar> avatars = avatarRepository.findAll();
+            c.setInitial(InitialEnum.YES);
             c.setAvatars(avatars);
             cs.add(c);
         }
         characterRepository.saveAll(cs);
+
+        Character character = new Character();
+        character.setName("Portgas D. Ace");
+        character.setInitial(InitialEnum.NO);
+        character.setAvatars(avatars);
+        characterRepository.save(character);
     }
 
     private void deleteAll() {

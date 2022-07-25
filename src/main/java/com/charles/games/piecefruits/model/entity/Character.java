@@ -1,5 +1,6 @@
 package com.charles.games.piecefruits.model.entity;
 
+import com.charles.games.piecefruits.model.enums.InitialEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,6 +40,10 @@ public class Character implements Serializable {
 
     @Column(name = "name", length = 20, unique = true, nullable = false)
     private String name;
+
+    @Column(name = "initial", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private InitialEnum initial;
 
     @Column(name = "created_at")
     @CreationTimestamp

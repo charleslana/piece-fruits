@@ -12,6 +12,7 @@ import com.charles.games.piecefruits.model.entity.AccountCharacter;
 import com.charles.games.piecefruits.model.entity.Attribute;
 import com.charles.games.piecefruits.model.entity.Character;
 import com.charles.games.piecefruits.model.enums.BannedEnum;
+import com.charles.games.piecefruits.model.enums.InitialEnum;
 import com.charles.games.piecefruits.repository.AccountCharacterRepository;
 import com.charles.games.piecefruits.service.interfaces.BasicService;
 import com.charles.games.piecefruits.service.utils.LocaleUtils;
@@ -39,7 +40,7 @@ public class AccountCharacterService implements BasicService {
     public ResponseDTO create(CreateAccountCharacterDTO dto) {
         validateExistsName(dto);
         validateCountExceeded();
-        Character character = characterService.existsCharacterId(dto.getCharacterId());
+        Character character = characterService.existsCharacterIdAndInitial(dto.getCharacterId(), InitialEnum.YES);
         AccountCharacter accountCharacter = mapper.toEntity(dto);
         accountCharacter.setImage("1");
         accountCharacter.setLevel(1L);
