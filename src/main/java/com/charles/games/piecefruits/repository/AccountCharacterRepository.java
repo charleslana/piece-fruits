@@ -12,6 +12,9 @@ import java.util.Optional;
 @Repository
 public interface AccountCharacterRepository extends JpaRepository<AccountCharacter, Long> {
 
+    @Query("select count(a) from AccountCharacter a where a.account.id = ?1")
+    Long countByAccountId(Long accountId);
+
     @Query("select (count(a) > 0) from AccountCharacter a where a.name = ?1")
     Boolean existsByName(String name);
 

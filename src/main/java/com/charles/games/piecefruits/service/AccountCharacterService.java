@@ -131,7 +131,7 @@ public class AccountCharacterService implements BasicService {
     }
 
     private void validateCountExceeded() {
-        if (repository.count() >= 4) {
+        if (repository.countByAccountId(accountService.getAuthAccount().getId()) >= 4) {
             throw getException("account.character.count.exceeded");
         }
     }
