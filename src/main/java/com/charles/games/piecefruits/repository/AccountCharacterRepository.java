@@ -15,8 +15,8 @@ public interface AccountCharacterRepository extends JpaRepository<AccountCharact
     @Query("select count(a) from AccountCharacter a where a.account.id = ?1")
     Long countByAccountId(Long accountId);
 
-    @Query("select (count(a) > 0) from AccountCharacter a where a.name = ?1")
-    Boolean existsByName(String name);
+    @Query("select (count(a) > 0) from AccountCharacter a where upper(a.name) = upper(?1)")
+    Boolean existsByNameIgnoreCase(String name);
 
     @Query("select a from AccountCharacter a where a.account.id = ?1")
     List<AccountCharacter> findAllByAccountId(Long id);

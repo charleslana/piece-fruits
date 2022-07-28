@@ -137,14 +137,14 @@ public class AccountCharacterService implements BasicService {
     }
 
     private void validateExistsName(UpdateAccountCharacterNameDTO dto) {
-        boolean existsByName = repository.existsByName(dto.getName());
+        boolean existsByName = repository.existsByNameIgnoreCase(dto.getName());
         if (existsByName && !Objects.equals(getAuthCharacter().getName(), dto.getName())) {
             throw getException("account.character.exists.name");
         }
     }
 
     private void validateExistsName(CreateAccountCharacterDTO dto) {
-        boolean existsByName = repository.existsByName(dto.getName());
+        boolean existsByName = repository.existsByNameIgnoreCase(dto.getName());
         if (existsByName) {
             throw getException("account.character.exists.name");
         }
