@@ -69,7 +69,7 @@ public class AccountCharacterService implements BasicService {
     }
 
     public List<ListAccountCharacterDTO> getAllByAccountId() {
-        return repository.findAllByAccountId(accountService.getAuthAccount().getId()).stream().map(mapper::toListDto).toList();
+        return repository.findAllByAccountIdOrderById(accountService.getAuthAccount().getId()).stream().map(mapper::toListDto).toList();
     }
 
     public AccountCharacter getAuthCharacter() {
