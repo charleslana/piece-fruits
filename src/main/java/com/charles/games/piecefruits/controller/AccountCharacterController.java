@@ -1,6 +1,7 @@
 package com.charles.games.piecefruits.controller;
 
 import com.charles.games.piecefruits.model.dto.CreateAccountCharacterDTO;
+import com.charles.games.piecefruits.model.dto.DetailAccountCharacterDTO;
 import com.charles.games.piecefruits.model.dto.ListAccountCharacterDTO;
 import com.charles.games.piecefruits.model.dto.ResponseDTO;
 import com.charles.games.piecefruits.model.dto.UpdateAccountCharacterDTO;
@@ -46,7 +47,7 @@ public class AccountCharacterController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/details")
-    public ResponseEntity<ListAccountCharacterDTO> get() {
+    public ResponseEntity<DetailAccountCharacterDTO> get() {
         log.info("REST to get account character details");
         return ResponseEntity.ok(service.get());
     }

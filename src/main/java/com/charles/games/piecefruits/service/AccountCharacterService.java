@@ -4,6 +4,7 @@ import com.charles.games.piecefruits.config.exceptions.BusinessRuleException;
 import com.charles.games.piecefruits.config.security.SecurityUtils;
 import com.charles.games.piecefruits.mapper.AccountCharacterMapper;
 import com.charles.games.piecefruits.model.dto.CreateAccountCharacterDTO;
+import com.charles.games.piecefruits.model.dto.DetailAccountCharacterDTO;
 import com.charles.games.piecefruits.model.dto.ListAccountCharacterDTO;
 import com.charles.games.piecefruits.model.dto.ResponseDTO;
 import com.charles.games.piecefruits.model.dto.UpdateAccountCharacterDTO;
@@ -22,6 +23,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,9 +44,8 @@ public class AccountCharacterService implements BasicService {
         validateCountExceeded();
         Character character = characterService.existsCharacterIdAndInitial(dto.getCharacterId(), InitialEnum.YES);
         AccountCharacter accountCharacter = mapper.toEntity(dto);
-        accountCharacter.setImage("1");
-        accountCharacter.setLevel(1L);
-        accountCharacter.setBanned(BannedEnum.NO);
+        setInitStatus(accountCharacter);
+        setInitStatistics(accountCharacter);
         accountCharacter.setAttribute(getAttribute());
         accountCharacter.setAccount(accountService.getAuthAccount());
         accountCharacter.setCharacter(character);
@@ -59,8 +60,8 @@ public class AccountCharacterService implements BasicService {
         return getSuccess("account.character.delete");
     }
 
-    public ListAccountCharacterDTO get() {
-        return repository.findById(getAuthCharacter().getId()).map(mapper::toListDto).orElseThrow(() -> getException("account.character.not.found"));
+    public DetailAccountCharacterDTO get() {
+        return repository.findById(getAuthCharacter().getId()).map(mapper::toDetailDto).orElseThrow(() -> getException("account.character.not.found"));
     }
 
     public List<ListAccountCharacterDTO> getAll() {
@@ -98,7 +99,7 @@ public class AccountCharacterService implements BasicService {
     @Transactional
     public ResponseDTO update(UpdateAccountCharacterDTO dto) {
         AccountCharacter authAccountCharacter = getAuthCharacter();
-        // TODO: 18/07/2022 atualizar personagem da conta
+        authAccountCharacter.setBiography(dto.getBiography());
         return getSuccess("account.character.updated");
     }
 
@@ -128,6 +129,32 @@ public class AccountCharacterService implements BasicService {
 
     private AccountCharacter getCharacterId(Long id) {
         return repository.findByAccountIdAndIdAndBanned(accountService.getAuthAccount().getId(), id, BannedEnum.NO).orElseThrow(() -> getException("account.character.not.found"));
+    }
+
+    private void setInitStatistics(AccountCharacter accountCharacter) {
+        accountCharacter.setExperience(0L);
+        accountCharacter.setHonorWin(0L);
+        accountCharacter.setTotalBattle(0L);
+        accountCharacter.setWin(0L);
+        accountCharacter.setDefeat(0L);
+        accountCharacter.setDraw(0L);
+        accountCharacter.setDamageHit(0L);
+        accountCharacter.setDamageTaken(0L);
+        accountCharacter.setBellyWon(0L);
+        accountCharacter.setBellyLost(0L);
+        accountCharacter.setScore(0L);
+    }
+
+    private void setInitStatus(AccountCharacter accountCharacter) {
+        accountCharacter.setBanned(BannedEnum.NO);
+        accountCharacter.setImage("1");
+        accountCharacter.setLevel(1L);
+        accountCharacter.setBounty(0L);
+        accountCharacter.setFame(0L);
+        accountCharacter.setBelly(5000L);
+        accountCharacter.setGold(0L);
+        accountCharacter.setDayScore(0L);
+        accountCharacter.setImmunity(LocalDateTime.now().plusDays(1));
     }
 
     private void validateCountExceeded() {

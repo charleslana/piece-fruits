@@ -55,6 +55,62 @@ public class AccountCharacter implements Serializable {
     @Enumerated(EnumType.STRING)
     private FactionEnum faction;
 
+    @Column(name = "bounty", nullable = false)
+    private Long bounty;
+
+    @Column(name = "fame", nullable = false)
+    private Long fame;
+
+    private Long power = 0L;
+
+    @Column(name = "biography", length = 200)
+    private String biography;
+
+    @Column(name = "belly", nullable = false)
+    private Long belly;
+
+    @Column(name = "gold", nullable = false)
+    private Long gold;
+
+    @Column(name = "day_score", nullable = false)
+    private Long dayScore;
+
+    @Column(name = "immunity")
+    private LocalDateTime immunity;
+
+    @Column(name = "experience", nullable = false)
+    private Long experience;
+
+    @Column(name = "honor_win", nullable = false)
+    private Long honorWin;
+
+    @Column(name = "total_battle", nullable = false)
+    private Long totalBattle;
+
+    @Column(name = "win", nullable = false)
+    private Long win;
+
+    @Column(name = "defeat", nullable = false)
+    private Long defeat;
+
+    @Column(name = "draw", nullable = false)
+    private Long draw;
+
+    @Column(name = "damage_hit", nullable = false)
+    private Long damageHit;
+
+    @Column(name = "damage_taken", nullable = false)
+    private Long damageTaken;
+
+    @Column(name = "belly_won", nullable = false)
+    private Long bellyWon;
+
+    @Column(name = "belly_lost", nullable = false)
+    private Long bellyLost;
+
+    @Column(name = "score", nullable = false)
+    private Long score;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
