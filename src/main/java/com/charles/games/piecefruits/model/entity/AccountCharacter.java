@@ -127,7 +127,11 @@ public class AccountCharacter implements Serializable {
     @JoinColumn(name = "character_id", nullable = false)
     private Character character;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "attribute_id", nullable = false)
     private Attribute attribute;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "crew_member_id")
+    private CrewMember crewMember;
 }

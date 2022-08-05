@@ -104,6 +104,11 @@ public class AccountCharacterService implements BasicService {
     }
 
     @Transactional
+    public void updateAttribute(AccountCharacter authAccountCharacter) {
+        repository.save(authAccountCharacter);
+    }
+
+    @Transactional
     public ResponseDTO updateName(UpdateAccountCharacterNameDTO dto) {
         validateExistsName(dto);
         AccountCharacter authAccountCharacter = getAuthCharacter();

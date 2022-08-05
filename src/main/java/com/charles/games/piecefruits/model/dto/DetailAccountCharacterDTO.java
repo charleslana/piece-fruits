@@ -40,4 +40,5 @@ public class DetailAccountCharacterDTO implements Serializable {
     private Long score;
     private ListAttributeDTO attribute;
     private ListCharacterDTO character;
+    private ListCrewMemberDTO crewMember;
 }

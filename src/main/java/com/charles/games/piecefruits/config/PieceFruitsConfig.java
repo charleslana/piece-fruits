@@ -5,7 +5,10 @@ import com.charles.games.piecefruits.model.entity.AccountCharacter;
 import com.charles.games.piecefruits.model.entity.Attribute;
 import com.charles.games.piecefruits.model.entity.Avatar;
 import com.charles.games.piecefruits.model.entity.Character;
+import com.charles.games.piecefruits.model.entity.Crew;
+import com.charles.games.piecefruits.model.entity.CrewMember;
 import com.charles.games.piecefruits.model.enums.BannedEnum;
+import com.charles.games.piecefruits.model.enums.CrewRoleEnum;
 import com.charles.games.piecefruits.model.enums.FactionEnum;
 import com.charles.games.piecefruits.model.enums.GenderEnum;
 import com.charles.games.piecefruits.model.enums.InitialEnum;
@@ -15,6 +18,8 @@ import com.charles.games.piecefruits.repository.AccountCharacterRepository;
 import com.charles.games.piecefruits.repository.AccountRepository;
 import com.charles.games.piecefruits.repository.AvatarRepository;
 import com.charles.games.piecefruits.repository.CharacterRepository;
+import com.charles.games.piecefruits.repository.CrewRepository;
+import com.charles.games.piecefruits.service.utils.FunctionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +41,7 @@ public class PieceFruitsConfig {
     private final AccountCharacterRepository accountCharacterRepository;
     private final CharacterRepository characterRepository;
     private final AvatarRepository avatarRepository;
+    private final CrewRepository crewRepository;
 
     @Bean
     CommandLineRunner commandLineRunner() {
@@ -43,6 +49,7 @@ public class PieceFruitsConfig {
 //            deleteAll();
 //            createAvatar();
 //            createCharacter();
+//            createCrew();
 //            createAccount();
         };
     }
@@ -66,10 +73,17 @@ public class PieceFruitsConfig {
 
         accountRepository.saveAll(List.of(account1, account2));
 
-        createAccountCharacter(account1);
+        CrewMember crewMember = new CrewMember();
+        crewMember.setCrewRole(CrewRoleEnum.LEADER);
+        crewMember.setScore(0L);
+        Optional<Crew> crew = crewRepository.findAll().stream().findFirst();
+        crewMember.setCrew(crew.stream().findFirst().get());
+
+        createAccountCharacter(account1, FunctionUtils.getRandomString(), crewMember);
+        createAccountCharacter(account1, FunctionUtils.getRandomString(), null);
     }
 
-    private void createAccountCharacter(Account account) {
+    private void createAccountCharacter(Account account, String characterName, CrewMember crewMember) {
         AccountCharacter accountCharacter = new AccountCharacter();
         accountCharacter.setAccount(account);
         Attribute attribute = new Attribute();
@@ -83,7 +97,7 @@ public class PieceFruitsConfig {
         accountCharacter.setFaction(FactionEnum.PIRATE);
         accountCharacter.setImage("1");
         accountCharacter.setLevel(1L);
-        accountCharacter.setName("Name");
+        accountCharacter.setName(characterName);
         accountCharacter.setBounty(0L);
         accountCharacter.setFame(0L);
         accountCharacter.setBelly(5000L);
@@ -101,9 +115,18 @@ public class PieceFruitsConfig {
         accountCharacter.setBellyWon(0L);
         accountCharacter.setBellyLost(0L);
         accountCharacter.setScore(0L);
+        accountCharacter.setCrewMember(crewMember);
         Optional<Character> character = characterRepository.findAll().stream().findFirst();
         accountCharacter.setCharacter(character.stream().findFirst().get());
         accountCharacterRepository.save(accountCharacter);
+    }
+
+    private void createCrew() {
+        Crew crew = new Crew();
+        crew.setName(FunctionUtils.getRandomString());
+        crew.setLevel(1L);
+        crew.setExperience(0L);
+        crewRepository.save(crew);
     }
 
     private void createAvatar() {
